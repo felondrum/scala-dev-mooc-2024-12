@@ -1,6 +1,6 @@
 package collections
 
-import collections.task_collections.{Auto, capitalizeIgnoringASCII, filterAllLeftDealerAutoWithoutRight, intersectionAuto, numbersToNumericString}
+import collections.task_collections._
 import org.scalatest.flatspec.AnyFlatSpec
 
 class check_collections_task extends AnyFlatSpec {
@@ -12,8 +12,9 @@ class check_collections_task extends AnyFlatSpec {
 
   "check numbersToNumericString" should "ok" in {
     val text = "Hello. I am 9 years old"
-    val transformText = "Hello. I am ten years old"
-    assert(numbersToNumericString(text) === transformText)
+    val transformText = "Hello. I am ten years old" // Было в исходном задании - ошибка?
+    val transformText_ = "Hello. I am nine years old" // Мое изменение
+    assert(numbersToNumericString(text) === transformText_)
     assert(numbersToNumericString("") === "")
     assert(numbersToNumericString("4") === "four")
   }
