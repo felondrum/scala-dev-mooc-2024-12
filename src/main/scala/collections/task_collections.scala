@@ -16,7 +16,13 @@ object task_collections {
    *
    * **/
   def capitalizeIgnoringASCII(text: List[String]): List[String] = {
-    List.empty
+    def capitalizeIgnoringASCIIPart: PartialFunction[(String, Int), String] = {
+      case head: (String, Int) if head._2 == 0 => head._1
+      case tailIsASCII: (String, Int) if tailIsASCII._2 > 0 && isASCIIString(tailIsASCII._1) => tailIsASCII._1.toUpperCase
+      case tailIsNotASCII: (String, Int) => tailIsNotASCII._1.toLowerCase
+    }
+
+    text.zipWithIndex.collect(capitalizeIgnoringASCIIPart)
   }
 
   /**
@@ -29,7 +35,21 @@ object task_collections {
    * HINT: Для всех возможных комбинаций чисел стоит использовать Map
    * **/
   def numbersToNumericString(text: String): String = {
-    ""
+    val map: Map[String, String] = Map apply
+      ("0" -> "zero",
+        "1" -> "one",
+        "2" -> "two",
+        "3" -> "three",
+        "4" -> "four",
+        "5" -> "five",
+        "6" -> "six",
+        "7" -> "seven",
+        "8" -> "eight",
+        "9" -> "nine")
+    val Space = " "
+    text.split(Space)
+      .map(word => map.getOrElse(word, word))
+      .mkString(Space)
   }
 
   /**
@@ -46,16 +66,17 @@ object task_collections {
    * Хотим узнать какие машины можно обслужить учитывая этих двух дилеров
    * Реализуйте метод который примет две коллекции (два источника) и вернёт объединенный список уникальный значений
    **/
-  def intersectionAuto(dealerOne: Iterable[Auto], dealerTwo: Iterable[Auto]): Iterable[Auto] = {
-    Iterable.empty
+  def intersectionAuto(dealerOne: Vector[Auto], dealerTwo: Seq[Auto]): Set[Auto] = {
+    (dealerOne ++ dealerTwo).toSet
   }
 
   /**
    * Хотим узнать какие машины обслуживается в первом дилеромском центре, но не обслуживаются во втором
    * Реализуйте метод который примет две коллекции (два источника)
    * и вернёт уникальный список машин обслуживающихся в первом дилерском центре и не обслуживающимся во втором
-   **/
-  def filterAllLeftDealerAutoWithoutRight(dealerOne: Iterable[Auto], dealerTwo: Iterable[Auto]): Iterable[Auto] = {
-    Iterable.empty
+   * */
+  def filterAllLeftDealerAutoWithoutRight(dealerOne: Vector[Auto], dealerTwo: Seq[Auto]): Iterable[Auto] = {
+    dealerOne
+      .filter(fromFirst => !dealerTwo.contains(fromFirst)).toSet
   }
 }
