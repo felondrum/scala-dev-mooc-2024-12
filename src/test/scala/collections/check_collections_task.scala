@@ -3,6 +3,7 @@ package collections
 import collections.task_collections._
 import org.scalatest.flatspec.AnyFlatSpec
 
+
 class check_collections_task extends AnyFlatSpec {
 
   "check capitalizeIgnoringASCII" should "ok" in  {
