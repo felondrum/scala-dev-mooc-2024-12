@@ -1,3 +1,4 @@
+import sbt.internal.IvyConsole.Dependencies
 
 scalaVersion := "2.13.12"
 
