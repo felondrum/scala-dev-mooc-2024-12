@@ -1,5 +1,5 @@
 
-scalaVersion := "2.13.16"
+scalaVersion := "3.6.3"
 
 
 name := "scala-dev-mooc-2024-12"
