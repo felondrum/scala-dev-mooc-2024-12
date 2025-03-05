@@ -1,7 +1,7 @@
 package ru.otus.module2
 
 import cats.Functor
-import ru.otus.module2.catsHomework.{Branch, Leaf, Tree, treeFunctor}
+import ru.otus.module2.catsHomework.{Branch, Leaf, Tree, eitherME, treeFunctor}
 
 import scala.util.{Failure, Success, Try}
 
@@ -11,6 +11,8 @@ object d {
     val result: Tree[Int] = treeFunctor.map(tree)(_ + 3)
     println(tree) //Branch(Leaf(1),Branch(Leaf(2),Leaf(3)))
     println(result) //Branch(Leaf(4),Branch(Leaf(5),Leaf(6)))
+
+    eitherME
   }
 }
 
@@ -104,8 +106,9 @@ package object catsHomework {
    * где в качестве типа ошибки будет String
    */
 
-  //не компилируется. Не могу понять почему
-  val eitherME: MonadError[Either[String, Any], String] = new MonadError[Either[String, Any], String] {
+  type MyError[+A] = Either[String, A]
+
+  val eitherME: MonadError[MyError, String] = new MonadError[MyError, String] {
     def flatMap[A, B](fa: Either[String, A])(f: A => Either[String, B]): Either[String, B] = fa.flatMap(f)
 
     def pure[A](v: A): Either[String, A] = Right(v)
