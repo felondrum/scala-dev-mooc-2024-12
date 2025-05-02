@@ -15,7 +15,7 @@ trait UserService{
     def listUsersWithRole(roleCode: RoleCode): QIO[List[UserDTO]]
 }
 class Impl(userRepo: UserRepository) extends UserService {
-    val ctx = db.Ctx
+    val dc = db.Ctx
 
     def listUsers(): QIO[List[User]] =
         userRepo.list()
@@ -31,7 +31,7 @@ class Impl(userRepo: UserRepository) extends UserService {
 
 
     def addUserWithRole(user: User, roleCode: RoleCode): QIO[UserDTO] = 
-        ctx.transaction {
+        dc.transaction {
             for {
                 createdUser <- userRepo.createUser(user)
                 _ <- userRepo.insertRoleToUser(roleCode, createdUser.typedId)
