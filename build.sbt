@@ -14,6 +14,7 @@ libraryDependencies ++= Dependencies.fs2
 libraryDependencies ++= Dependencies.http4s
 libraryDependencies ++= Dependencies.circe
 
+
 libraryDependencies ++= Seq(
   "org.http4s" %% "http4s-ember-server" % "0.23.26",
   "org.http4s" %% "http4s-ember-client" % "0.23.26",
@@ -24,3 +25,11 @@ libraryDependencies ++= Seq(
   "io.circe" %% "circe-parser" % "0.14.6",
   "org.typelevel" %% "cats-effect-testing-scalatest" % "1.5.0" % Test
 )
+
+libraryDependencies ++= Dependencies.akkaContainers
+libraryDependencies += Dependencies.zioHttp
+libraryDependencies += Dependencies.liquibase
+libraryDependencies += Dependencies.postgres
+libraryDependencies += Dependencies.logback
+libraryDependencies ++= Dependencies.quill
+libraryDependencies ++= Dependencies.testContainers
