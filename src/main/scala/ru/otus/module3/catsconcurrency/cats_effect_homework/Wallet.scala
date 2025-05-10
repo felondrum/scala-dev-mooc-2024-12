@@ -1,8 +1,10 @@
-/*package ru.otus.module3.catsconcurrency.cats_effect_homework
+package ru.otus.module3.catsconcurrency.cats_effect_homework
 
 import cats.effect.Sync
 import cats.implicits._
 import Wallet._
+import java.nio.file.{Files, Paths}
+import java.nio.charset.StandardCharsets
 
 // DSL управления электронным кошельком
 trait Wallet[F[_]] {
@@ -25,9 +27,35 @@ trait Wallet[F[_]] {
 // - java.nio.file.Files.exists
 // - java.nio.file.Paths.get
 final class FileWallet[F[_]: Sync](id: WalletId) extends Wallet[F] {
-  def balance: F[BigDecimal] = ???
-  def topup(amount: BigDecimal): F[Unit] = ???
-  def withdraw(amount: BigDecimal): F[Either[WalletError, Unit]] = ???
+  private val filePath = Paths.get(s"wallet_$id.txt")
+  
+  private def readBalance: F[BigDecimal] = Sync[F].delay {
+    if (Files.exists(filePath)) {
+      BigDecimal(Files.readString(filePath))
+    } else {
+      BigDecimal(0)
+    }
+  }
+  
+  private def writeBalance(amount: BigDecimal): F[Unit] = Sync[F].delay {
+    Files.write(filePath, amount.toString.getBytes(StandardCharsets.UTF_8))
+  }
+  
+  def balance: F[BigDecimal] = readBalance
+  
+  def topup(amount: BigDecimal): F[Unit] = for {
+    current <- readBalance
+    _ <- writeBalance(current + amount)
+  } yield ()
+  
+  def withdraw(amount: BigDecimal): F[Either[WalletError, Unit]] = for {
+    current <- readBalance
+    result <- if (current >= amount) {
+      writeBalance(current - amount).map(_ => Right(()))
+    } else {
+      Sync[F].pure(Left(BalanceTooLow))
+    }
+  } yield result
 }
 
 object Wallet {
@@ -37,11 +65,11 @@ object Wallet {
   // Здесь нужно использовать обобщенную версию уже пройденного вами метода IO.delay,
   // вызывается она так: Sync[F].delay(...)
   // Тайпкласс Sync из cats-effect описывает возможность заворачивания сайд-эффектов
-  def fileWallet[F[_]: Sync](id: WalletId): F[Wallet[F]] = ???
+  def fileWallet[F[_]: Sync](id: WalletId): F[Wallet[F]] = 
+    Sync[F].delay(new FileWallet[F](id))
 
   type WalletId = String
 
   sealed trait WalletError
   case object BalanceTooLow extends WalletError
 }
-*/
